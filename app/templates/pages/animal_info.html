@@ -69,7 +69,7 @@
 {% block javascript %}
 <script>
     function fetchAnimalData() {
-        fetch('http://192.168.137.17:8000/pecuaria/api/latest-animal/')
+        fetch('http://192.168.137.17:8000/pecuaria/api/latest-animal/') // Ip da máquina (Digitar ipconfig no cmd e pegar o ipv4)
             .then(response => {
                 if (!response.ok) {
                     throw new Error('Erro ao buscar dados do animal');
