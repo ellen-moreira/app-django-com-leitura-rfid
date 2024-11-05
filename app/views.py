@@ -654,7 +654,7 @@ def get_animal(request, rfid):
             'pai': animal.pai.identificacao_unica if animal.pai else 'N/A',
             'status': animal.status,
             'setor': animal.setor.nome if animal.setor else 'N/A',
-            'foto': animal.foto.url if animal.foto else os.path.join(settings.MEDIA_URL, 'bois/guliro.jpg'),
+            'foto': animal.foto.url if animal.foto else os.path.join(settings.MEDIA_URL, 'default/sem-foto-sem-imagem.jpeg'),
         }
 
         latest_animal_data = data  # Armazena os dados lidos
@@ -672,36 +672,3 @@ def latest_animal(request):
     
 def animal_info(request):
     return render(request, 'pages/animal_info.html')
-
-    # try:
-    #     animal = Animal.objects.latest('id')  # Último animal registrado
-    #     idade_em_dias = animal.calcular_idade_em_dias()
-    #     idade_em_meses = animal.calcular_idade_em_meses()
-    #     idade_em_anos = animal.calcular_idade_em_anos()
-
-    #     data = {
-    #         'id': animal.id,
-    #         'identificacao_unica': animal.identificacao_unica,
-    #         'nome': animal.nome if hasattr(animal, 'nome') else 'Sem nome',
-    #         'rfid': animal.rfid,
-    #         'especie': animal.especie.nome if animal.especie else 'Indefinida',
-    #         'raca': animal.raca.nome if animal.raca else 'Indefinida',
-    #         'tipo': animal.tipo.nome if animal.tipo else 'Indefinido',
-    #         'sexo': animal.sexo,
-    #         'peso_de_nascimento': float(animal.peso_de_nascimento) if animal.peso_de_nascimento else 0,
-    #         'data_hora_de_nascimento': animal.data_hora_de_nascimento.strftime('%d/%m/%Y %H:%M') if animal.data_hora_de_nascimento else 'Não informado',
-    #         'mae': animal.mae.identificacao_unica if animal.mae else 'Desconhecida',
-    #         'pai': animal.pai.identificacao_unica if animal.pai else 'Desconhecido',
-    #         'status': 'Ativo' if animal.status else 'Inativo',
-    #         'setor': animal.setor.nome if animal.setor else 'Indefinido',
-    #         'parto': animal.parto.nome if animal.parto else 'Indefinido',
-    #         'observacao': animal.get_observacao_resumida(),
-    #         'idade_dias': idade_em_dias,
-    #         'idade_meses': idade_em_meses,
-    #         'idade_anos': idade_em_anos,
-    #         'foto': animal.foto.url if animal.foto else os.path.join(settings.MEDIA_URL, 'bois/default.jpg'),
-    #     }
-
-    #     return JsonResponse(data, status=200)
-    # except Animal.DoesNotExist:
-    #     return JsonResponse({'error': 'Animal não encontrado'}, status=404)
