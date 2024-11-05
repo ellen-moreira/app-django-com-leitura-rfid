@@ -1,0 +1,24 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset='utf-8'>
+    <meta http-equiv='X-UA-Compatible' content='IE=edge'>
+    <meta name='viewport' content='width=device-width, initial-scale=1'>
+    {% load static %}
+    <link rel='stylesheet' type='text/css' media='screen' href='{% static '/css/bootstrap/bootstrap.min.css' %}'>
+    <title>{% block title %}{% endblock %}</title>
+</head>
+
+<body>
+    {% include 'nav.html' %}
+    {% block content %}
+    {% endblock %}
+    {% load static %}
+    <script src="{% static '/js/bootstrap/bootstrap.min.js' %}"></script>
+    <script src="{% static '/js/bootstrap/bootstrap.bundle.min.js' %}"></script>
+    <script src="{% static 'js/jquery/jquery_dev_3.7.1.js' %}"></script>
+    <script src="https://unpkg.com/@popperjs/core@2/dist/umd/popper.js"></script>
+</body>
+
+</html>

@@ -1,0 +1,44 @@
+{% extends 'base_industria.html' %}
+
+{% block title %}Produtos{% endblock %}
+
+{% block content %}
+<div class="bg-body-tertiary p-5 rounded my-3">
+    <h1 class="text-center">Produtos</h1>
+</div>
+
+<!-- Table -->
+<div class="table-responsive">
+    <table class="table table-sm table-striped align-middle" id="example">
+        <caption>Lista de produtos</caption>
+        <thead>
+            <tr>
+                <th scope="col">ID</th>
+                <th scope="col">Produto</th>
+                <th scope="col">Quantidade</th>
+                <th scope="col">Unidade de Medida</th>
+                <th scope="col">Grupo</th>
+                <th scope="col">SubGrupo</th>
+                <th scope="col">Tipo</th>
+                <th scope="col">Marca</th>
+                <th scope="col">Fabricante</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for produto in produtos %}
+            <tr>
+                <td>{{ produto.id }}</td>
+                <td>{{ produto.nome_produto }}</td>
+                <td>{{ produto.quantidade }}</td>
+                <td>{{ produto.unidade_medida }}</td>
+                <td>{{ produto.grupo }}</td>
+                <td>{{ produto.subgrupo }}</td>
+                <td>{{ produto.tipo }}</td>
+                <td>{{ produto.marca }}</td>
+                <td>{{ produto.fabricante }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}

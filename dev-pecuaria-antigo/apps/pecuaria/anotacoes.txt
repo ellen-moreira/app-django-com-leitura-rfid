@@ -1,0 +1,74 @@
+def dashboard(request):
+    # Configurando a localização para português
+    locale.setlocale(locale.LC_TIME, 'pt_BR.UTF-8')
+
+    total_animais = Animal.objects.count()
+    total_machos = Animal.objects.filter(sexo='Macho').count()
+    total_femeas = Animal.objects.filter(sexo='Fêmea').count()
+    total_leitoes = Animal.objects.filter(tipo__nome='Leitão').count()
+    total_matrizes = Animal.objects.filter(tipo__nome='Matriz').count()
+    total_reprodutores = Animal.objects.filter(tipo__nome='Reprodutor').count()
+    total_partos = Parto.objects.count()
+
+    # Gráfico de quantidade de animais por especie
+    especie_counts = Animal.objects.values('especie__nome').annotate(count=Count('especie'))
+    especie_labels = [smart_str(item['especie__nome'], encoding='utf-8') for item in especie_counts]
+    especie_data = [item['count'] for item in especie_counts]
+
+    # Gráfico de quantidade de animais por raça
+    raca_counts = Animal.objects.values('raca__nome').annotate(count=Count('raca'))
+    raca_labels = [smart_str(item['raca__nome'], encoding='utf-8') for item in raca_counts]
+    raca_data = [item['count'] for item in raca_counts]
+
+    # Gráfico de quantidade de animais por tipo
+    tipo_counts = Animal.objects.values('tipo__nome').annotate(count=Count('tipo'))
+    tipo_labels = [smart_str(item['tipo__nome'], encoding='utf-8') for item in tipo_counts]
+    tipo_data = [item['count'] for item in tipo_counts]
+
+    # Gráfico de quantidade de partos por mês em 2024
+    partos_2024 = Parto.objects.filter(data_hora_parto__year=2024)
+    partos_por_mes = partos_2024.annotate(mes=ExtractMonth('data_hora_parto')).values('mes').annotate(count=Count('id'))
+
+    # Obtendo apenas os meses em que houve partos
+    meses_com_partos = [parto['mes'] for parto in partos_por_mes]
+
+    partos_mes_labels = [smart_str(calendar.month_name[mes].capitalize(), encoding='utf-8') for mes in meses_com_partos]  # Capitalizar para manter consistência
+    partos_mes_data = [parto['count'] if parto['mes'] in [p['mes'] for p in partos_por_mes] else 0 for parto in partos_por_mes]
+
+    # Gráfico de quantidade de manejos por mês em 2024
+    manejos_2024 = Manejo.objects.filter(data_hora_manejo__year=2024)
+    manejos_por_mes = manejos_2024.annotate(mes=ExtractMonth('data_hora_manejo')).values('mes').annotate(count=Count('id'))
+
+    # Obtendo apenas os meses em que houve manejos
+    meses_com_manejos = [manejo['mes'] for manejo in manejos_por_mes]
+    manejos_mes_labels = [smart_str(calendar.month_name[mes].capitalize(), encoding='utf-8') for mes in meses_com_manejos]  # Capitalizar para manter consistência
+    manejos_mes_data = [manejo['count'] if manejo['mes'] in [m['mes'] for m in manejos_por_mes] else 0 for manejo in manejos_por_mes]
+
+    # Gráfico de quantidade de animais por sexo
+    sexo_counts = Animal.objects.values('sexo').annotate(count=Count('sexo'))
+    sexo_labels = [item['sexo'] for item in sexo_counts]
+    sexo_data = [item['count'] for item in sexo_counts]
+
+    context = {
+        'especie_labels': especie_labels,
+        'especie_data': especie_data,
+        'raca_labels': raca_labels,
+        'raca_data': raca_data,
+        'tipo_labels': tipo_labels,
+        'tipo_data': tipo_data,
+        'partos_mes_labels': partos_mes_labels,
+        'partos_mes_data': partos_mes_data,
+        'total_animais': total_animais,
+        'total_machos': total_machos,
+        'total_femeas': total_femeas,
+        'total_leitoes': total_leitoes,
+        'total_matrizes': total_matrizes,
+        'total_reprodutores': total_reprodutores,
+        'total_partos': total_partos,
+        'manejos_mes_labels': manejos_mes_labels,
+        'manejos_mes_data': manejos_mes_data,
+        'sexo_labels': sexo_labels,
+        'sexo_data': sexo_data
+    }
+
+    return render(request, 'dashboard.html', context)

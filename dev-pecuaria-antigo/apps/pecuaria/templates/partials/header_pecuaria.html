@@ -1,0 +1,61 @@
+{% load static %}
+
+<header class="fixed-top">
+    <nav class="navbar navbar-expand-md navbar-dark bg-success">
+        <div class="container-fluid">
+            <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarsExample"
+                aria-controls="navbarsExample" aria-expanded="false" aria-label="Toggle navigation">
+                <span class="navbar-toggler-icon"></span>
+            </button>
+            <a class="navbar-brand text-uppercase fw-bold col-md-3 me-0 d-block d-md-none" href="#">
+                Pecuária
+                <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
+            </a>
+            <div class="collapse navbar-collapse d-md-flex" id="navbarsExample">
+                <a class="navbar-brand text-uppercase fw-bold col-md-3 me-0 d-none d-md-block" href="#">
+                    Pecuária
+                    <img src="{% static 'images/logo.png' %}" alt="Logo" class="logo">
+                </a>
+                <ul class="navbar-nav col-md-6 justify-content-md-center">
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/pecuaria/' %}active{% endif %}"
+                            href="{% url 'index_pecuaria' %}">Home</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/pecuaria/dashboard/' %}active{% endif %}"
+                            href="{% url 'dashboard' %}">Dashboard</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/pecuaria/lote/' or '/pecuaria/lote/criar/' in request.path or '/pecuaria/lote/atualizar/' in request.path %}active{% endif %}"
+                            href="{% url 'lote' %}">Lotes</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/pecuaria/parto/' or '/pecuaria/parto/criar/' in request.path or '/pecuaria/parto/atualizar/' in request.path %}active{% endif %}"
+                            href="{% url 'parto' %}">Partos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/pecuaria/manejo/' or '/pecuaria/manejo/criar/' in request.path or '/pecuaria/manejo/atualizar/' in request.path %}active{% endif %}"
+                            href="{% url 'manejo' %}">Manejos</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/pecuaria/saida/' or '/pecuaria/saida/criar/' in request.path or '/pecuaria/saida/atualizar/' in request.path %}active{% endif %}"
+                            href="{% url 'saida' %}">Saídas</a>
+                    </li>
+                    <li class="nav-item">
+                        <a class="nav-link {% if request.path == '/pecuaria/animal/' or '/pecuaria/animal/criar/' in request.path or '/pecuaria/animal/atualizar/' in request.path %}active{% endif %}"
+                            href="{% url 'animal' %}">Animais</a>
+                    </li>
+                </ul>
+                {% if user.is_authenticated %}
+                <div class="d-md-flex col-md-3 justify-content-md-end">
+                    <a href="{% url 'logout' %}" class="btn btn-outline-light btn-logout">Sair</a>
+                </div>
+                {% else %}
+                <div class="d-md-flex col-md-3 justify-content-md-end">
+                    <a href="#" class="btn btn-outline-light btn-login">Entrar</a>
+                </div>
+                {% endif %}
+            </div>
+        </div>
+    </nav>
+</header>

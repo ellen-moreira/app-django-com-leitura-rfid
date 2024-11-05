@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+
+{% block title %}HOME{% endblock %}
+
+{% block content %}
+
+<div class="col-lg-6 col-xxl-4 my-5 mx-auto">
+    <div class="d-grid gap-2">
+        {% load core_tags %}
+        {% if user.is_authenticated and user.is_superuser %}
+            <a href="/pecuaria/" class="btn btn-primary" type="button">Pecuaria</a>
+            <a href="/edificios/" class="btn btn-primary" type="button">Edificios</a>
+            <a href="/industria/" class="btn btn-primary" type="button">Industria</a>
+            <a href="/seguranca/" class="btn btn-primary" type="button">Segurança</a>
+        {% endif %}
+    </div>
+</div>
+
+{% endblock %}

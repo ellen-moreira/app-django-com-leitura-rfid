@@ -1,0 +1,54 @@
+{% extends 'base/base_pecuaria.html' %}
+
+{% block title %}Partos{% endblock title %}
+
+{% block content %}
+<!-- Botão para adicionar parto -->
+<a class="btn btn-primary mb-3" href="{% url 'criar_parto' %}" role="button">
+    <i class="fas fa-plus me-1"></i>
+    Adicionar Parto
+</a>
+
+<!-- Tabela de partos -->
+<div class="card p-3">
+    <div class="table-responsive pb-3">
+        <table id="table-pecuaria" class="table table-striped table-bordered nowrap align-middle text-center mb-0">
+            <caption>Lista de partos</caption>
+            <thead>
+                <tr>
+                    <!-- <th scope="col">ID</th> -->
+                    <th scope="col">Data/Hora</th>
+                    <th scope="col">Fêmea</th>
+                    <th scope="col">Macho</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Vivos</th>
+                    <th scope="col">Mortos</th>
+                    <th scope="col">Mumificados</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for parto in partos %}
+                <tr>
+                    <!-- <td>{{ parto.id }}</td> -->
+                    <td>{{ parto.data_hora_parto|date:'d/m/Y \à\s H:i' }}</td>
+                    <td>{{ parto.femea }}</td>
+                    <td>{{ parto.macho }}</td>
+                    <td>{{ parto.tipo }}</td>
+                    <td>{{ parto.quantidade_filhotes_vivos }}</td>
+                    <td>{{ parto.quantidade_filhotes_mortos }}</td>
+                    <td>{{ parto.quantidade_filhotes_mumificados }}</td>
+                    <td>
+                        <a class="text-decoration-none me-1" href="{% url 'atualizar_parto' parto.id %}" role="button">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="text-decoration-none btn-delete" href="{% url 'excluir_parto' parto.id %}" role="button">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+        </table>
+    </div>
+</div>
+{% endblock content %}

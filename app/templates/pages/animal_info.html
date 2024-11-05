@@ -1,0 +1,115 @@
+<!-- Template: pages/animal_info.html -->
+
+<!-- Extends Base Template -->
+{% extends 'base/base.html' %}
+
+<!-- Tab Title -->
+{% block title %}Animal{% endblock title %}
+
+<!-- Custom CSS -->
+{% block css %}
+<style>
+    @keyframes blink {
+        0%, 100% { opacity: 1; }
+        50% { opacity: 0.5; }
+    }
+
+    .blinking-div {
+        animation: blink 1s infinite;
+    }
+
+    .custom-text {
+        font-size: 1.25rem; /* Aumenta o tamanho da fonte */
+        font-weight: bold;  /* Deixa o texto em negrito */
+    }
+</style>
+{% endblock css %}
+
+<!-- Content -->
+{% block content %}
+    <div class="mt-5">
+        <div class="card mb-3 mx-auto" style="max-width: 1000px; flex: 0 0 auto;" id="animal-info" style="display: none;">
+            <div class="card-header">
+                Informações do animal
+            </div>
+            <div class="row g-0 p-3">
+                <div class="col-md-5">
+                    <img src="" class="img-fluid rounded w-100 h-100" alt="Foto do animal" id="animal-photo">
+                </div>
+                <div class="col-md-7">
+                    <div class="card-body">
+                        <div class="card-text"><strong>ID:</strong> <span id="animal-id"></span></div>
+                        <div class="card-text"><strong>Identificação Única:</strong> <span id="identificacao-unica"></span></div>
+                        <div class="card-text"><strong>RFID:</strong> <span id="animal-rfid"></span></div>
+                        <div class="card-text"><strong>Espécie:</strong> <span id="animal-especie"></span></div>
+                        <div class="card-text"><strong>Raça:</strong> <span id="animal-raca"></span></div>
+                        <div class="card-text"><strong>Tipo:</strong> <span id="animal-tipo"></span></div>
+                        <div class="card-text"><strong>Sexo:</strong> <span id="animal-sexo"></span></div>
+                        <div class="card-text"><strong>Data de Nascimento:</strong> <span id="animal-data-nascimento"></span></div>
+                        <div class="card-text"><strong>Peso de Nascimento:</strong> <span id="animal-peso-nascimento"></span></div>
+                        <div class="card-text"><strong>Mãe:</strong> <span id="animal-mae"></span></div>
+                        <div class="card-text"><strong>Pai:</strong> <span id="animal-pai"></span></div>
+                        <div class="card-text"><strong>Status:</strong> <span id="animal-status"></span></div>
+                        <div class="card-text"><strong>Setor:</strong> <span id="animal-setor"></span></div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    
+
+        <div class="p-3 mb-2 bg-light rounded-3" id="waiting-message">
+            <div class="p-3 mb-2 bg-light rounded-3 blinking-div">
+                <p class="mb-0 custom-text">Aguardando leitura do animal...</p>
+            </div>
+        </div>
+    </div>
+{% endblock %}
+
+<!-- Custom JS -->
+{% block javascript %}
+<script>
+    function fetchAnimalData() {
+        fetch('http://192.168.137.17:8000/pecuaria/api/latest-animal/')
+            .then(response => {
+                if (!response.ok) {
+                    throw new Error('Erro ao buscar dados do animal');
+                }
+                return response.json();
+            })
+            .then(data => {
+                document.getElementById('animal-id').innerText = data.id;
+                document.getElementById('identificacao-unica').innerText = data.identificacao_unica;
+                document.getElementById('animal-rfid').innerText = data.rfid;
+                document.getElementById('animal-especie').innerText = data.especie;
+                document.getElementById('animal-raca').innerText = data.raca;
+                document.getElementById('animal-tipo').innerText = data.tipo;
+                document.getElementById('animal-sexo').innerText = data.sexo;
+                document.getElementById('animal-data-nascimento').innerText = data.data_hora_de_nascimento;
+                document.getElementById('animal-peso-nascimento').innerText = data.peso_de_nascimento;
+                document.getElementById('animal-mae').innerText = data.mae;
+                document.getElementById('animal-pai').innerText = data.pai;
+                document.getElementById('animal-status').innerText = data.status ? 'Ativo' : 'Inativo';
+                document.getElementById('animal-setor').innerText = data.setor;
+                
+                // Exibe a foto do animal, ou uma imagem padrão se não houver foto
+                const photoElement = document.getElementById('animal-photo');
+                photoElement.src = data.foto;
+
+                // Esconde a mensagem de espera e exibe as informações do animal
+                document.getElementById('animal-info').style.display = 'flex';
+                document.getElementById('waiting-message').style.display = 'none';
+            })
+            .catch(error => {
+                console.error('Erro:', error);
+                // Se não conseguir buscar dados, mantém a mensagem de espera visível
+                document.getElementById('animal-info').style.display = 'none';
+                document.getElementById('waiting-message').style.display = 'block';
+            });
+    }
+
+    // Atualiza os dados a cada 5 segundos
+    setInterval(fetchAnimalData, 1000);
+    // Chama a função uma vez no carregamento da página
+    fetchAnimalData();
+</script>
+{% endblock javascript %}

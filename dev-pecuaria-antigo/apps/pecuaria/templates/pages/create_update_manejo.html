@@ -1,0 +1,128 @@
+{% extends 'base/base_pecuaria.html' %}
+
+{% load crispy_forms_tags %}
+
+{% block title %}
+{% if request.path == '/pecuaria/manejo/criar/' %}
+Adicionar Manejo
+{% else %}
+Editar Manejo
+{% endif %}
+{% endblock title %}
+
+{% block content %}
+<a class="btn btn-outline-success mb-3" href="{% url 'manejo' %}" role="button">
+    {% if request.path == '/pecuaria/manejo/criar/' %}
+    Voltar
+    {% else %}
+    Cancelar
+    {% endif %}
+</a>
+
+<form action="" method="post" id="manejo-form" autocomplete="off" novalidate>
+    {% csrf_token %}
+
+    <div class="card">
+        <div class="card-header">
+            Informações do Manejo
+        </div>
+        <div class="row p-3">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                {{ manejo_form.funcionario|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                {{ manejo_form.data_hora_manejo|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                {{ manejo_form.animal|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                {{ manejo_form.lote|as_crispy_field }}
+            </div>
+        </div>
+    </div>
+    <hr class="border border-success border-3 opacity-75 mb-0">
+    <div class="row">
+        <div class="col-md-6">
+            {{ procedimento_formset.management_form }}
+
+            {% for form in procedimento_formset %}
+            <div class="inlineform-procedimento card my-3">
+                <div class="card-header">
+                    Informações do Procedimento
+                </div>
+                <div class="row pt-3 px-3">
+                    {{ form|crispy }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+        <!-- <hr class="border border-success border-3 opacity-75"> -->
+        <div class="col-md-6">
+            {{ produto_formset.management_form }}
+
+            {% for form in produto_formset %}
+            <div class="inlineform-produto card my-3">
+                <div class="card-header">
+                    Informações do Produto
+                </div>
+                <div class="row pt-3 px-3">
+                    {{ form|crispy }}
+                </div>
+            </div>
+            {% endfor %}
+        </div>
+    </div>
+    <div class="col-12 d-flex justify-content-center">
+        <button class="btn btn-success w-100 mt-3" type="submit">
+            {% if request.path == '/pecuaria/manejo/criar/' %}
+            Salvar
+            {% else %}
+            Salvar Alterações
+            {% endif %}
+        </button>
+    </div>
+</form>
+{% endblock content %}
+    
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        $('.inlineform-procedimento').formset({
+            prefix: '{{ procedimento_formset.prefix }}',
+            addText: 'Adicionar novo Procedimento',
+            deleteText: 'Remover este Procedimento',
+            addCssClass: 'btn btn-primary w-100',
+            deleteCssClass: 'btn btn-danger mx-3 mb-3',
+        });
+
+        $('.inlineform-produto').formset({
+            prefix: '{{ produto_formset.prefix }}',
+            addText: 'Adicionar novo Produto',
+            deleteText: 'Remover este Produto',
+            addCssClass: 'btn btn-primary w-100',
+            deleteCssClass: 'btn btn-danger mx-3 mb-3',
+        });
+
+        function toggleFields() {
+            if ($('#id_animal').val()) {
+                $('#id_lote').prop('disabled', true);
+            } else {
+                $('#id_lote').prop('disabled', false);
+            }
+
+            if ($('#id_lote').val()) {
+                $('#id_animal').prop('disabled', true);
+            } else {
+                $('#id_animal').prop('disabled', false);
+            }
+        }
+
+        $('#id_animal, #id_lote').change(function () {
+            toggleFields();
+        });
+
+        toggleFields();
+    });
+</script>
+{% endblock javascript %}

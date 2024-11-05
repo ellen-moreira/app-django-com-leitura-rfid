@@ -1,0 +1,190 @@
+{% extends 'base/base_pecuaria.html' %}
+
+{% block title %}Gráficos de Dados{% endblock %}
+
+{% block content %}
+<!-- Filtro e Pesquisa -->
+<div class="accordion accordion-flush border" id="accordionExample">
+    <div class="accordion-item">
+        <h2 class="accordion-header">
+            <button class="accordion-button collapsed" type="button" data-bs-toggle="collapse" data-bs-target="#collapseOne"
+                aria-expanded="false" aria-controls="collapseOne">
+                Gerador de gráficos
+            </button>
+        </h2>
+        <div id="collapseOne" class="accordion-collapse collapse" data-bs-parent="#accordionExample">
+            <div class="accordion-body overflow-hidden">
+                <form action="#" method="get" id="filtro-form">
+                    <div class="row">
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="tipo_grafico">Selecione o tipo de dados</label>
+                            <select class="form-select" id="tipo_grafico" name="tipo_grafico">
+                                <option value="partos">Partos</option>
+                                <option value="manejos">Manejos</option>
+                                <option value="saidas">Saídas</option>
+                                <!-- Adicione outras opções conforme necessário -->
+                                <option value="animais">Animais</option>
+                                <option value="coberturas">Coberturas</option>
+                                <option value="procedimentos_manejo">Procedimentos de Manejo</option>
+                                <!-- Adicione conforme sua modelagem -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-6 mb-3">
+                            <label for="periodo">Período</label>
+                            <select class="form-select" id="periodo" name="periodo">
+                                <option value="daily">Diário</option>
+                                <option value="weekly">Semanal</option>
+                                <option value="monthly">Mensal</option>
+                                <option value="yearly">Anual</option>
+                                <!-- Adicione outras opções conforme necessário -->
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3 mb-3">
+                            <label for="tipo">Tipo de Gráfico</label>
+                            <select class="form-select" id="tipo" name="tipo">
+                                <option value="bar">Barra</option>
+                                <option value="line">Linha</option>
+                                <option value="pie">Pizza</option>
+                                <option value="doughnut">Rosca</option>
+                                <option value="polarArea">Área Polar</option>
+                                <option value="radar">Radar</option>
+                            </select>
+                        </div>
+                        <div class="form-group col-md-3 mb-3">
+                            <label for="cor_fundo">Cor de Fundo</label>
+                            <input type="color" class="form-control form-control-color" id="cor_fundo" name="cor_fundo" value="#36a2eb">
+                        </div>
+                        <div class="form-group col-md-3 mb-3">
+                            <label for="cor_borda">Cor da Borda</label>
+                            <input type="color" class="form-control form-control-color" id="cor_borda" name="cor_borda" value="#000000">
+                        </div>
+                        <div class="form-group col-md-3 mb-3">
+                            <div class="form-check">
+                                <input class="form-check-input" type="checkbox" id="cores_aleatorias" name="cores_aleatorias">
+                                <label class="form-check-label" for="cores_aleatorias">
+                                    Usar Cores Aleatórias
+                                </label>
+                            </div>
+                        </div>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- Gráfico -->
+<div class="card mt-3">
+    <div class="card-header">
+        Gráfico de Dados
+    </div>
+    <div class="card-body">
+        <canvas id="grafico-dados"></canvas>
+    </div>
+</div>
+{% endblock content %}
+
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        var ctx = document.getElementById('grafico-dados').getContext('2d');
+        var myChart;
+
+        function randomColor() {
+            var letters = '0123456789ABCDEF';
+            var color = '#';
+            for (var i = 0; i < 6; i++) {
+                color += letters[Math.floor(Math.random() * 16)];
+            }
+            return color;
+        }
+
+        function fetchChartData() {
+            var formData = $('#filtro-form').serializeArray();
+            var dataObj = {};
+            formData.forEach(function (item) {
+                dataObj[item.name] = item.value;
+            });
+
+            $.ajax({
+                url: '{% url "gerar_grafico_dinamico" %}',
+                data: dataObj,
+                dataType: 'json',
+                success: function (data) {
+                    if (myChart) {
+                        myChart.destroy(); // Limpa o gráfico anterior antes de criar um novo
+                    }
+
+                    var backgroundColors = [];
+                    var borderColors = [];
+
+                    if (dataObj.cores_aleatorias) {
+                        for (var i = 0; i < data.data.length; i++) {
+                            backgroundColors.push(randomColor());
+                            borderColors.push(randomColor());
+                        }
+                    } else {
+                        backgroundColors = data.data.map(() => dataObj.cor_fundo);
+                        borderColors = data.data.map(() => dataObj.cor_borda);
+                    }
+
+                    myChart = new Chart(ctx, {
+                        type: dataObj.tipo,
+                        data: {
+                            labels: data.labels,
+                            datasets: [{
+                                label: 'Quantidade',
+                                data: data.data,
+                                backgroundColor: backgroundColors,
+                                borderColor: borderColors,
+                                borderWidth: 1
+                            }]
+                        },
+                        options: {
+                            responsive: true,
+                            scales: {
+                                x: {
+                                    display: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Período'
+                                    }
+                                },
+                                y: {
+                                    display: true,
+                                    title: {
+                                        display: true,
+                                        text: 'Quantidade'
+                                    }
+                                }
+                            }
+                        }
+                    });
+                }
+            });
+        }
+
+        // Desabilita ou habilita os campos de cor conforme o estado do checkbox de cores aleatórias
+        $('#cores_aleatorias').on('change', function () {
+            if ($(this).is(':checked')) {
+                $('#cor_fundo, #cor_borda').prop('disabled', true);
+            } else {
+                $('#cor_fundo, #cor_borda').prop('disabled', false);
+            }
+        });
+
+        // Fetch dados do gráfico quando houver mudança no formulário
+        $('#filtro-form').on('input change', function () {
+            fetchChartData();
+        });
+
+        // Fetch dados do gráfico ao carregar a página inicialmente
+        fetchChartData();
+
+        // Verifica o estado inicial do checkbox de cores aleatórias
+        if ($('#cores_aleatorias').is(':checked')) {
+            $('#cor_fundo, #cor_borda').prop('disabled', true);
+        }
+    });
+</script>
+{% endblock javascript %}

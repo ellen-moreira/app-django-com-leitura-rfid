@@ -1,0 +1,31 @@
+<header class="d-flex flex-wrap justify-content-center py-3 mb-4 border-bottom">
+    <div class="container-fluid d-flex justify-content-between align-items-center">
+        <ul class="navbar-nav">
+            <li class="nav-item">
+                <a class="nav-link" href="/">
+                    {% load static %}
+                    <img src="{% static '/images/logo.png' %}" alt="mdo" width="35" height="35" class="">
+                </a>
+            </li>
+        </ul>
+        <div class="d-flex gap-2">
+            <div class="flex-fill">
+                <style>
+                    .btn-custom {
+                        width: 100px;
+                    }
+                </style>
+                <button type="button" class="btn btn-warning btn-custom">
+                    <a class="nav-link" href="{% url 'admin:index' %}">
+                        Admin
+                    </a>
+                </button>
+                {% if user.is_authenticated %}
+                <button type="button" class="btn btn-danger btn-custom">
+                    <a class="nav-link" href="{% url 'logout' %}">Sair</a>
+                </button>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</header>

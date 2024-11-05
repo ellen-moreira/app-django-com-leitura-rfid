@@ -1,0 +1,55 @@
+{% extends 'base/base_pecuaria.html' %}
+
+{% block title %}Saídas{% endblock title %}
+
+{% block content %}
+<!-- Botão para adicionar parto -->
+<a class="btn btn-primary mb-3" href="{% url 'criar_saida' %}" role="button">
+    <i class="fas fa-plus me-1"></i>
+    Adicionar Saída
+</a>
+
+<!-- Tabela de saídas -->
+<div class="card p-3">
+    <div class="table-responsive pb-3">
+        <table id="table-pecuaria" class="table table-striped table-bordered nowrap align-middle text-center mb-0">
+            <caption>Lista de saídas</caption>
+            <thead>
+                <tr>
+                    <th scope="col">Data/Hora</th>
+                    <th scope="col">Animal</th>
+                    <th scope="col">Tipo</th>
+                    <th scope="col">Setor</th>
+                    <th scope="col">Observação</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for saida in saidas %}
+                <tr>
+                    <td>{{ saida.data_hora_saida|date:'d/m/Y \à\s H:i' }}</td>
+                    <td>{{ saida.animal.identificacao_unica }}</td>
+                    <td>{{ saida.tipo }}</td>
+                    <td>{{ saida.setor }}</td>
+                    <td>
+                        {% if saida.observacao %}
+                        {{ saida.observacao }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="text-decoration-none me-1" href="{% url 'atualizar_saida' saida.id %}" role="button">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="text-decoration-none btn-delete" href="{% url 'excluir_saida' saida.id %}" role="button">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

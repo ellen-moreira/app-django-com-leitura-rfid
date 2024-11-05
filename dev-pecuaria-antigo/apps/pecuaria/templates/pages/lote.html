@@ -1,0 +1,68 @@
+{% extends 'base/base_pecuaria.html' %}
+
+{% block title %}Lotes{% endblock title %}
+
+{% block content %}
+<!-- Botão para adicionar lote -->
+<a class="btn btn-primary mb-3" href="{% url 'criar_lote' %}" role="button">
+    <i class="fas fa-plus me-1"></i>
+    Adicionar Lote
+</a>
+
+<!-- Tabela de lotes -->
+<div class="card p-3">
+    <div class="table-responsive pb-3">
+        <table id="table-pecuaria" class="table table-striped table-bordered nowrap align-middle text-center mb-0">
+            <caption>Lista de lotes</caption>
+            <thead>
+                <tr>
+                    <!-- <th scope="col">ID</th> -->
+                    <th scope="col">Número do lote</th>
+                    <th scope="col">Baia</th>
+                    <!-- <th scope="col">Nº de animais</th> -->
+                    <th scope="col">Animais</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for lote in lotes %}
+                <tr>
+                    <!-- <td>{{ lote.id }}</td> -->
+                    <td>{{ lote.numero }}</td>
+                    <td>
+                        {% if lote.baia %}
+                        Baia {{ lote.baia.numero }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <!-- <td>
+                        {{ lote.numero_animais }} 
+                        {% if lote.numero_animais == 1 %}
+                        animal
+                        {% else %}
+                        animais
+                        {% endif %}
+                    </td> -->
+                    <td>
+                        {% for animal in lote.animais.all %}
+                        <span>{{ animal.identificacao_unica }}</span><br>
+                        {% empty %}
+                        -
+                        {% endfor %}
+                    </td>
+                    <td>
+                        <a class="text-decoration-none me-1" href="{% url 'atualizar_lote' lote.id %}" role="button">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="text-decoration-none btn-delete" href="{% url 'excluir_lote' lote.id %}" role="button">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock content %}

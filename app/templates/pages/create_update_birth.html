@@ -1,0 +1,106 @@
+<!-- Template: pages/create_update_births.html -->
+
+<!-- Extends Base Template -->
+{% extends 'base/base.html' %}
+
+<!-- Load Crispy Forms Tags -->
+{% load crispy_forms_tags %}
+
+<!-- Tab Title -->
+{% block title %}
+{% if request.path == '/pecuaria/parto/cadastrar/' %}
+Cadastrar Parto
+{% else %}
+Atualizar Parto
+{% endif %}
+{% endblock title %}
+
+<!-- Content -->
+{% block content %}
+<!-- Botão para voltar ou cancelar -->
+<a class="btn btn-outline-success mb-3" href="{% url 'pecuaria:partos' %}" role="button">
+    {% if request.path == '/pecuaria/parto/cadastrar/' %}
+    Voltar
+    {% else %}
+    Cancelar
+    {% endif %}
+</a>
+
+<!-- Formulário de Parto -->
+<form action="" method="post" id="parto-form" autocomplete="off" novalidate>
+    {% csrf_token %}
+
+    <div class="card">
+        <div class="card-header">
+            Informações do Parto
+        </div>
+        <div class="row p-3">
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                {{ parto_form.femea|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                {{ parto_form.macho|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                {{ parto_form.data_hora_do_parto|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-3">
+                {{ parto_form.tipo|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                {{ parto_form.quantidade_de_filhotes_vivos|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-6 col-md-6 col-lg-4">
+                {{ parto_form.quantidade_de_filhotes_mortos|as_crispy_field }}
+            </div>
+            <div class="col-12 col-sm-12 col-md col-lg-4">
+                {{ parto_form.quantidade_de_filhotes_mumificados|as_crispy_field }}
+            </div>
+            <div class="col-12">
+                {{ parto_form.observacao|as_crispy_field }}
+            </div>
+        </div>
+    </div>
+    
+    <hr class="border border-success border-3 opacity-75">
+
+    {{ animal_formset.management_form }}
+
+    {% for form in animal_formset %}
+    <div class="inlineform card my-3">
+        <div class="card-header">
+            Animal
+        </div>
+        <div class="row pt-3 px-3" id="fields-container">
+            {{ form|crispy }}
+        </div>
+    </div>
+    {% endfor %}
+
+    <div class="col-12 d-flex justify-content-center">
+        <button class="btn btn-success w-100 mt-3" type="submit">
+            {% if request.path == '/pecuaria/parto/cadastrar/' %}
+            Salvar
+            {% else %}
+            Salvar Alterações
+            {% endif %}
+        </button>
+    </div>
+</form>
+{% endblock content %}
+
+<!-- JavaScript -->
+{% block javascript %}
+<script>
+    $(document).ready(function () {
+        // Formset para adicionar e remover animais
+        $('.inlineform').formset({
+            prefix: '{{ animal_formset.prefix }}',
+            addText: 'Adicionar novo Animal',
+            deleteText: 'Remover este Animal',
+            addCssClass: 'btn btn-primary w-100',
+            deleteCssClass: 'btn btn-danger mx-3 mb-3',
+        });
+    });
+</script>
+{% endblock javascript %}

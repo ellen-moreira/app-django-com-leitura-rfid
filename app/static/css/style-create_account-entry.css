@@ -1,0 +1,11 @@
+/* CSS for the create account page and login page */
+
+html,
+body {
+    height: 100%;
+}
+
+.form-signin {
+    max-width: 500px;
+    padding: 1rem;
+}

@@ -1,0 +1,211 @@
+/* Estilo para os inputs do tipo checkbox */
+.form-check-input {
+    cursor: pointer; /* Define um cursor de ponteiro ao passar o mouse sobre os elementos de entrada do tipo checkbox */
+}
+
+/* Estilo para os cards */
+.card {
+    cursor: pointer; /* Define um cursor de ponteiro ao passar o mouse sobre os elementos de classe "card" */
+}
+
+/* Estilos para os cards e sua organização */
+.card-container {
+    display: flex; /* Organiza os cards em um layout flexível */
+    flex-wrap: wrap; /* Permite que os cards quebrem para a próxima linha quando não há espaço suficiente */
+    justify-content: space-between; /* Distribui os cards uniformemente com espaço entre eles */
+}
+
+.card-item {
+    flex: 1; /* Define que os cards ocupam todo o espaço disponível horizontalmente */
+    margin: 0.5rem; /* Define margem de 0.5rem ao redor dos cards */
+    max-width: calc(33.33% - 1rem); /* Define a largura máxima de cada card para que haja 3 cards por linha */
+}
+
+.card-body {
+    display: flex; /* Organiza os elementos dentro do card em um layout flexível */
+    flex-direction: column; /* Alinha os elementos verticalmente dentro do card */
+}
+
+/* Estilo para a legenda no lado direito */
+.legend-container {
+    top: 55px; /* Posiciona a legenda 55px a partir do topo */
+    right: 0; /* Alinha a legenda à direita */
+    padding: 0.7rem; /* Adiciona preenchimento à legenda */
+    background-color: #f8f9fa; /* Define a cor de fundo da legenda */
+    line-height: 1.5; /* Define a altura da linha na legenda */
+    display: flex; /* Organiza os elementos da legenda em um layout flexível */
+    align-items: center; /* Alinha os elementos verticalmente no centro da legenda */
+}
+
+.legend-container > div {
+    margin-right: 20px; /* Adiciona margem à direita dos elementos de div dentro da legenda */
+}
+
+.legend-container img {
+    margin-right: 10px; /* Adiciona margem à direita das imagens dentro da legenda */
+}
+
+/* Aumenta a largura da modal */
+.modal-dialog {
+    max-width: 100%; /* Define a largura máxima para o diálogo modal */
+}
+
+/* Aumenta o tamanho da fonte dos elementos dentro do modal */
+.modal-content {
+    font-size: 18px; /* Define o tamanho da fonte para os elementos dentro do modal */
+    
+}
+
+/* Aumenta o espaçamento entre os elementos dentro do modal */
+.modal-content h5 {
+    margin-bottom: 20px; /* Adiciona margem inferior aos elementos h5 dentro do modal */
+}
+
+.modal-content .form-check-label {
+    margin-bottom: 10px; /* Adiciona margem inferior aos elementos de etiqueta de verificação dentro do modal */
+}
+
+/* Estilos para elementos com fundo branco */
+.white-background {
+    background-color: white; /* Define a cor de fundo como branca */
+    background-size: 50%; /* Define o tamanho do fundo */
+    padding: 10px; /* Adiciona preenchimento ao elemento */
+    border-radius: 10px; /* Define um raio de borda arredondada */
+}
+
+.white-table {
+    background-color: white; /* Define a cor de fundo como branca */
+    background-size: 50%; /* Define o tamanho do fundo */
+    margin-left: 8px; /* Adiciona margem à esquerda do elemento */
+    border-radius: 10px; /* Define um raio de borda arredondada */
+}
+
+/* Estilos para campos de data */
+.date-fields {
+    display: flex; /* Organiza os campos de data em um layout flexível */
+    gap: 10px; /* Define o espaço entre os campos de data */
+}
+
+.date-fields div {
+    flex: 1; /* Define que os campos de data ocupam todo o espaço disponível horizontalmente */
+}
+
+/* Estilos para tabelas */
+table {
+    border-collapse: separate; /* Define a separação entre as bordas das células da tabela */
+    border-spacing: 5px; /* Define o espaço entre as colunas da tabela */
+    width: 100%; /* Define a largura da tabela como 100% da largura disponível */
+}
+
+th, td {
+    text-align: center; /* Centraliza o texto nas células das tabelas */
+    padding: 5px; /* Adiciona preenchimento às células das tabelas */
+}
+
+/* Estilo para cabeçalhos h3 centrados */
+h3 {
+    text-align: center; /* Centraliza o texto dos cabeçalhos h3 */
+}
+
+/* Estilo para slots de tempo */
+.time-slot {
+    display: flex; /* Organiza os elementos em um layout flexível */
+    flex-direction: column; /* Alinha os elementos verticalmente em coluna */
+}
+
+.form-check {
+    margin: 5px 0; /* Adiciona margem acima e abaixo dos elementos de verificação de formulário */
+}
+
+.table-container {
+    font-size: 30px;
+    width: 100%; /* Define a largura da table-container para ocupar 80% da largura disponível */
+    margin-left: 0; /* Ajuste a margem esquerda para 5px */
+    margin-right: 0; /* Define a margem direita como 0 para aproximar do canto */
+ 
+}
+.modal-fullscreen {
+    width: 100%;
+}
+/* Estilo para os botões */
+
+/* Estilos para botões verdes e vermelhos */
+
+.modal-custom-width {
+    max-width: 20%; /* Defina a largura desejada aqui */
+}
+
+
+.modal-custom-width {
+    max-width: 20%; /* Defina a largura desejada aqui */
+}
+body {
+    margin: 0;
+    padding: 0;
+    font-family: Arial, sans-serif;
+}
+.custom-modal {
+    width: 50%; /* Defina a largura desejada, pode ser em pixels ou porcentagem */
+    max-width: 500px; /* Define um valor máximo para a largura */
+    position: fixed; /* Usa uma posição fixa para centralizar corretamente */
+    top: 50%; /* Posiciona o modal verticalmente no meio da tela */
+    left: 50%; /* Posiciona o modal horizontalmente no meio da tela */
+    transform: translate(-50%, -50%); /* Ajusta o posicionamento vertical e horizontal */
+}
+
+
+/* Estilo para o conteúdo do modal (opcional) */
+.custom-modal .modal-content {
+    padding: 15px;
+}
+
+/* Estilo para o botão Fechar (opcional) */
+.custom-modal .modal-header .btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+}
+
+/* Estilo para o corpo do modal (opcional) */
+.custom-modal .modal-body {
+    padding: 15px;
+}
+.custom-modal .modal-header .btn-close {
+    position: absolute;
+    top: 10px;
+    right: 10px;
+    margin-right: 10px; /* Adiciona margem direita ao botão */
+}
+/* Estilo para centralizar o formulário no meio da tela */
+.dropdown-menu .form-container {
+
+margin: auto;
+margin-top: 20px;
+}
+
+/* Estilo para aumentar a altura do formulário */
+.dropdown-menu .form-container form {
+width: 500px;
+height: 500px;
+padding: 20px; /* Adiciona um preenchimento interno ao formulário */
+}
+
+/* Estilo para o botão de voltar */
+.dropdown-menu .form-container .btn-voltar {
+margin-top: 10px;
+}
+
+/* Opcional: Estilo para centralizar o botão de enviar */
+.dropdown-menu .form-container form .btn-success {
+margin: auto;
+display: block;
+}
+
+.botao-vermelho {
+background-color: red !important; /* Use !important para garantir que a cor seja aplicada */
+/* Adicione outros estilos conforme necessário */
+}
+.verde {
+background-color: green !important; /* Use !important para garantir que a cor seja aplicada */
+/* Adicione outros estilos conforme necessário */
+}

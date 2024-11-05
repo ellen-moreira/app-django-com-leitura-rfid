@@ -1,0 +1,115 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+  <meta charset="UTF-8">
+  <meta http-equiv="X-UA-Compatible" content="IE=edge">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+    integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+  <title>Responder Questionário</title>
+  <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+  <style>
+    .shaded-box {
+  box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.5);
+}
+.a {
+  border: 2px solid black;
+}
+  </style>
+</head>
+
+<body class="bg-success.bg-gradient">
+
+  <main class="container mt-4 d-flex flex-column align-items-center justify-content-center">
+    {% if error_message %}
+      <script>
+        alert("{{ error_message }}");
+      </script>
+    {% endif %}
+
+    <div id="ViewForm" class="form-container p-4 rounded shaded-box col-md-6">
+      <form method="POST" action="{% url 'salvarAnswer' %}" onsubmit="atualizarCamposHidden()"
+        class="bg-light p-4 rounded">
+        {% csrf_token %}
+        <div class="mb-1 d-flex flex-column align-items-center">
+          <h1 class="mb-4">{{ u_questionario.nome }}</h1>
+          <p>{{ u_questionario.objetivo }}</p>
+        </div>
+        {% for quest in quests %}
+          <div class="mb-3">
+            {% if quest.tipo.tipo == "text" %}
+              <label for="{{ quest.id }}" class="form-label bold">{{ quest.title }}</label>
+              <input type="text" name="{{ quest.id }}" id="{{ quest.id }}" placeholder="{{ quest.title }}"
+                class="form-control" required>
+            {% elif quest.tipo.tipo == "textarea" %}
+              <label for="{{ quest.id }}" class="form-label bold">{{ quest.title }}</label>
+              <textarea id="{{ quest.id }}" name="{{ quest.id }}" rows="4" cols="50"
+                class="form-control" required></textarea>
+            {% elif quest.tipo.tipo == "selectbox" or quest.tipo.tipo == "select" %}
+              <label for="{{ quest.id }}" class="form-label bold">{{ quest.title }}</label>
+              <select name="{{ quest.id }}" class="form-select" required>
+                {% for alternative in quest.alternativa_set.all %}
+                  <option value="{{ alternative.title }}">{{ alternative.title }}</option>
+                {% endfor %}
+              </select>
+            {% elif quest.tipo.tipo == "radio" %}
+              <p class="bold">{{ quest.title }}</p>
+              <input type="hidden" id="{{ quest.id }}">
+              {% for alternative in quest.alternativa_set.all %}
+                <div class="form-check">
+                  <input type="radio" name="{{ quest.id }}" value="{{ alternative.title }}"
+                    id="alt_{{ alternative.id }}" class="form-check-input a">
+                  <label for="alt_{{ alternative.id }}" class="form-check-label">{{ alternative.title }}</label>
+                </div>
+              {% endfor %}
+            {% elif quest.tipo.tipo == "checkbox" %}
+              <p class="bold">{{ quest.title }}</p>
+              <input type="hidden" id="{{ quest.id }}">
+              {% for alternative in quest.alternativa_set.all %}
+                <div class="form-check">
+                  <input type="checkbox" name="{{ quest.id }}" value="{{ alternative.title }}"
+                    id="alt_{{ alternative.id }}" class="form-check-input">
+                  <label for="alt_{{ alternative.id }}" class="form-check-label">{{ alternative.title }}</label>
+                </div>
+              {% endfor %}
+            {% endif %}
+          </div>
+        {% endfor %}
+        <input type="hidden" name="arrayP" id="arrayP" value="">
+        <input type="hidden" name="idQuestionario" id="idQuestionario" value="{{ u_questionario.id }}">
+        <div class="d-flex flex-column align-items-center">
+          <button type="submit" class="btn btn-primary">Enviar Resposta</button>
+        </div>
+      </form>
+    </div>
+  </main>
+
+  <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/js/bootstrap.bundle.min.js"
+    integrity="sha384-HwwvtgBNo3bZJJLYd8oVXjrBZt8cqVSpeBNS5n7C8IVInixGAoxmnlMuBnhbgrkm"
+    crossorigin="anonymous"></script>
+  <script>
+    var arrayP = [];
+
+    // Essa função será chamada quando o formulário for enviado para atualizar os campos hidden.
+    function atualizarCamposHidden() {
+
+      arrayP.length = 0;
+      // Obtenha todos os campos do formulário
+      var formElements = document.querySelectorAll('form input[type="text"], form textarea, form select, form input[type="hidden"]');
+
+      // Itere pelos campos e adicione as informações aos arrays
+      formElements.forEach(function (element) {
+        arrayP.push(element.id)
+      });
+      arrayP.splice(0, 1); // Remove 3 elementos a partir do índice 1 (valores 2, 3, 4)
+      // Atualize os campos hidden com os arrays
+      arrayP.pop()
+      arrayP.pop()
+      console.log(arrayP)
+      document.getElementById("arrayP").value = JSON.stringify(arrayP);
+    }
+  </script>
+</body>
+
+</html>

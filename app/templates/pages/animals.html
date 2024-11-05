@@ -1,0 +1,43 @@
+<!-- Template: pages/animals.html -->
+
+<!-- Extends Base Template -->
+{% extends 'base/base.html' %}
+
+<!-- Load Template Tags -->
+{% load template_tags %}
+
+<!-- Tab Title -->
+{% block title %}Animais{% endblock title %}
+
+<!-- Content -->
+{% block content %}
+<!-- Mensagem de boas-vindas -->
+<div class="bg-body-tertiary p-5 rounded mb-3">
+    <h1 class="text-center">Registro de animais da {{ setor }}</h1>
+</div>
+
+<!-- Tabela de animais -->
+<div class="card p-3">
+    <div class="table-responsive pb-3">
+        <table id="table-pecuaria" class="table table-striped table-bordered nowrap align-middle text-center mb-0">
+            <caption>Lista de animais</caption>
+            <thead> 
+                <tr>
+                    {% for coluna in colunas %}
+                        <th>{{ coluna }}</th>
+                    {% endfor %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for animal in animais %}
+                    <tr>
+                        {% for coluna in colunas %}
+                            <td>{{ animal|get_field_value:coluna }}</td>
+                        {% endfor %}
+                    </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,94 @@
+/* Global */
+
+/* Google Fonts */
+@import url('https://fonts.googleapis.com/css2?family=Montserrat:wght@100;200;300;400;500;600;700;800;900&display=swap');
+
+* {
+    margin: 0;
+    padding: 0;
+    box-sizing: border-box;
+    font-family: 'Montserrat', sans-serif;
+}
+
+body {
+    display: flex;
+    flex-direction: column;
+    min-height: 100vh;
+}
+
+header {
+    flex-shrink: 0;
+}
+
+.logo {
+    width: 30px;
+    height: 30px;
+    color: #fff;
+}
+
+.content {
+    flex-grow: 1;
+    position: relative;
+    top: 57px;
+    margin-bottom: 5rem;
+}
+
+footer {
+    flex-shrink: 0;
+    position: relative;
+    bottom: 0;
+}
+
+/* Icons */
+.fa-eye {
+    color: #ffc107;
+}
+
+.fa-edit {
+    color: #0d6efd;
+}
+
+.fa-trash {
+    color: #dc3545;
+}
+
+/* Navbar Responsive */
+@media screen and (max-width: 767px) {
+    .btn-logout,
+    .btn-login {
+        width: 100%;
+    }
+}
+
+@media screen and (min-width: 767px) and (max-width: 1068px) {
+    #navbarsExample a,
+    #navbarsExample ul,
+    #navbarsExample button {
+        font-size: 0.9rem !important;
+    }
+}
+
+/* DataTables */
+
+div.dataTables_wrapper div.dt-row {
+    margin-top: 1rem !important;
+}
+
+table.dataTable>tbody>tr.child ul.dtr-details {
+    width: 100% !important;
+}
+
+table.dataTable>tbody>tr.child ul.dtr-details>li {
+    display: flex;
+    justify-content: space-between;
+}
+
+table.dataTable>tbody>tr.child span.dtr-title {
+    display: flex;
+    align-items: center;
+}
+
+li[data-dtr-index]:last-child span.dtr-data {
+    display: flex;
+    justify-content: space-between;
+}

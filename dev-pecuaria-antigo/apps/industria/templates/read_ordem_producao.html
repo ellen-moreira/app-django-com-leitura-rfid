@@ -1,0 +1,49 @@
+{% extends 'base_industria.html' %}
+
+{% block title %}Visualizar Ordem de produção{% endblock %}
+
+{% block content %}
+<a class="btn btn-outline-success my-3" href="{% url 'ordem_producao' %}" role="button">Voltar</a>
+
+<div class="card">
+    <div class="card-header text-center">
+        Ordem registrada em: {{ ordem_producao.created_at }}
+    </div>
+    <div class="card-body">
+        <h5 class="card-title text-center">Detalhes da ordem de produção:</h5>
+        <p class="card-text"><strong>Funcionário emissor da nota:</strong> {{ ordem_producao.funcionario_emitiu_ordem }}</p>
+        <p class="card-text"><strong>Receita:</strong> {{ ordem_producao.receita }}</p>
+        <p class="card-text"><strong>Quantidade:</strong> {{ ordem_producao.quantidade }}</p>
+        <p class="card-text"><strong>Status:</strong> {{ ordem_producao.status }}</p>
+
+        <div class="row mt-3">
+            <div class="col-12">
+                <div class="card">
+                    <h5 class="card-header">Produtos</h5>
+                    <div class="card-body">
+                        {% for ordem in entrada_produto.ordem_producao_produtos_set.all %}
+                        <p class="card-text"><strong>Receira {{ forloop.counter }}:</strong> {{ ordem.receita }}</p>
+                        <p class="card-text"><strong>Quantidade:</strong> {{ ordem.quantidade }}</p>
+                        <hr class="border border-success border-3 opacity-75">
+                        {% endfor %}
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="card-footer text-body-secondary text-end">
+        Entrada: {{ ordem_producao.id }}
+    </div>
+</div>
+{% endblock %}
+{% block javascript %}
+<script>
+    $(function () {
+        $('.inlineform').formset({
+            prefix: '{{ form_telefone.prefix }}',
+            addText: 'Adicionar nova Entrada',
+            deleteText: 'Remover esta Entrada'
+        });
+    });
+</script>
+{% endblock %}

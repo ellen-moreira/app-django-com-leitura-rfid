@@ -1,0 +1,267 @@
+{% extends 'base_predio.html' %}
+{% load static %}
+
+{% block title %}D_I{% endblock %}
+{% block content %}
+</main>
+<br>
+<link rel="stylesheet" href="{% static 'css/style_predio.css' %}">
+    <div class="container p-5 d-flex flex-column" style="margin-bottom: 0;">
+        <h1>{{ nome_predio }}</h1>
+        <div class="legend-container">
+           
+            <div>
+                <img src="{% static 'images/bola_verde.png' %}" alt="Green Image"><span>Livre</span>
+            </div>
+            <div>
+                <img src="{% static 'images/bola_amarela.png' %}" alt="Green Image"><span>Parcial Ocupada</span>
+            </div>
+            <div>
+                <img src="{% static 'images/bola_vermelha.png' %}" alt="Red Image"><span>Ocupada</span>
+            </div>
+        </div>
+    </div>
+    <div class="card-container d-flex flex-wrap">
+        {% for sala in salas_ti_reservaveis %}
+            <div class="card-item col-md-4 mb-3" style="flex: 0 0 30%;">
+                <div class="card clickable-card" data-bs-toggle="modal" data-bs-target="#modal{{ sala.id }}">
+                    <div class="card-body" style="width:100%;">
+                        <h5 class="card-title">Sala {{ sala.number }}</h5>
+                    </div>
+                </div>
+                
+            </div>
+
+<div class="modal fade" id="modal{{ sala.id }}" tabindex="-1" aria-labelledby="modal{{ sala.id }}Label" aria-hidden="true">
+    <div class="modal-dialog modal-fullscreen">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title" id="modal{{ sala.id }}Label">Sala {{ sala.number }} - {{ sala.type }}</h5>
+                <button type="button" class="btn btn-outline-success" data-bs-dismiss="modal">Fechar</button>
+            </div>
+            <div class="modal-body">
+                <!-- Tabela específica da sala -->
+                <div class="row">
+                    <div class="card mb-3">
+                        <h2 class="text-center">Sala {{ sala.number }}</h2>
+                        <div class="table-responsive" style="height: 100vh;">
+                            <table class="table borderless">
+                                <thead>
+                                    <tr>
+                                        <th>Horários</th>
+                                        {% for date in date_range %}
+                                        <th>
+                                            Dia {{ date|date:"d" }}
+                                            <br>
+                                            {{ date|date:"D" }}
+                                        </th>
+                                        {% endfor %}
+                                    </tr>
+                                </thead>
+                                <tbody>
+                                    {% for a in horasM %}
+                                    <tr>
+                                        <td>
+                                            {% if a.shift.shift == 'Matutino' %}
+                                                {{a.start_time}} até {{a.end_time}}
+                                            {% endif %}
+                                        </td>
+                                        {% for date in date_range %}
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-success sala-btn allocated-btn"  name="butao" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                  
+                                                </button>
+                                                
+                                                <div class="dropdown-menu">
+                                                    <!-- Adicione o conteúdo do formulário aqui -->
+                                                    <div class="form-container">
+                                                        <form id="formularioAlocacao{{ sala.id }}" method="POST" class="dynamic-form" action="{% url 'Allocation_Info' %}">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                                <h5 class="modal-title" id="modal{{ sala.id }}Label">Sala {{ sala.number }} - {{ sala.type }}</h5>
+                                                                <input type="hidden" id="predio{{ sala.id }}" name="predio" class="predio-input" value="{{ sala.building }}" >
+                                                                <input type="hidden" id="numero{{ sala.id }}" name="numero" class="numero-input" value="{{ sala.number }}">
+                                                                <input type="hidden" id="salaId" name="salaId" value="{{ sala.id }}">
+                                                                <input type="hidden" id="data" name="data" value="{{ date|date:"Y-m-d" }}" readonly>
+                                                                <input type="hidden" id="entrada" name="entrada" value="{{ a.start_time }}">
+                                                                <input type="hidden" id="saida" name="saida" value="{{ a.end_time }}">
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3">
+                                                                    <label for="nomeAlocacao" class="form-label">Nome de quem irá alocar</label>
+                                                                    <input type="text" class="form-control" id="nomeAlocacao" name="nomeAlocacao" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3">
+                                                                    <label for="nomeTurma" class="form-label">Turma</label>
+                                                                    <input type="text" class="form-control" id="nomeTurma" name="nomeTurma" required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="nomeDisciplina" class="form-label">Disciplina</label>
+                                                                    <input type="text" class="form-control" id="nomeDisciplina" name="nomeDisciplina" required>
+                                                                </div>
+                                                                <div class="mb-3" style="width: 30%;">
+                                                                    <label for="quantidadeHorarios" class="form-label">Quantidade de Horários</label>
+                                                                    <input type="number" class="form-control" id="quantidadeHorarios" name="quantidadeHorarios">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <button type="submit" class="btn btn-success">Salvar</button>
+                                                                <button type="button" class="btn btn-danger btn-voltar">Fechar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            
+                                        </td>
+                                        {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                    {% for a in horasV %}
+                                    <tr>
+                                        <td>
+                                            {% if a.shift.shift == 'Vespertino' %}
+                                                {{a.start_time}} até {{a.end_time}}
+                                            {% endif %}
+                                        </td>
+                                        {% for date in date_range %}
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-success" name="butao" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <!-- Adicione o conteúdo do formulário aqui -->
+                                                    <div class="form-container">
+                                                        <form id="formularioAlocacao{{ sala.id }}" method="POST" class="dynamic-form" action="{% url 'Allocation_Info' %}">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                                <h5 class="modal-title" id="modal{{ sala.id }}Label">Sala {{ sala.number }} - {{ sala.type }}</h5>
+                                                                <input type="hidden" id="predio{{ sala.id }}" name="predio" class="predio-input" value="{{ sala.building }}" >
+                                                                <input type="hidden" id="numero{{ sala.id }}" name="numero" class="numero-input" value="{{ sala.number }}">
+                                                                <input type="hidden" id="salaId" name="salaId" value="{{ sala.id }}">
+                                                                <input type="hidden" id="data" name="data" value="{{ date|date:"Y-m-d" }}" readonly>
+                                                                <input type="hidden" id="entrada" name="entrada" value="{{ a.start_time }}">
+                                                                <input type="hidden" id="saida" name="saida" value="{{ a.end_time }}">
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3">
+                                                                    <label for="nomeAlocacao" class="form-label">Nome de quem irá alocar</label>
+                                                                    <input type="text" class="form-control" id="nomeAlocacao" name="nomeAlocacao" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3">
+                                                                    <label for="nomeTurma" class="form-label">Turma</label>
+                                                                    <input type="text" class="form-control" id="nomeTurma" name="nomeTurma" required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="nomeDisciplina" class="form-label">Disciplina</label>
+                                                                    <input type="text" class="form-control" id="nomeDisciplina" name="nomeDisciplina" required>
+                                                                </div>
+                                                                <div class="mb-3" style="width: 30%;">
+                                                                    <label for="quantidadeHorarios" class="form-label">Quantidade de Horários</label>
+                                                                    <input type="number" class="form-control" id="quantidadeHorarios" name="quantidadeHorarios">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <button type="submit" class="btn btn-success">Salvar</button>
+                                                                <button type="button" class="btn btn-danger btn-voltar">Fechar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                        {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                    {% for a in horasN %}
+                                    <tr>
+                                        <td>
+                                            {% if a.shift.shift == 'Noturno' %}
+                                                {{a.start_time}} até {{a.end_time}}
+                                            {% endif %}
+                                        </td>
+                                        {% for date in date_range %}
+                                        <td>
+                                            <div class="btn-group">
+                                                <button type="button" class="btn btn-success" name="butao" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                                </button>
+                                                <div class="dropdown-menu">
+                                                    <!-- Adicione o conteúdo do formulário aqui -->
+                                                    <div class="form-container">
+                                                        <form id="formularioAlocacao{{ sala.id }}" method="POST" class="dynamic-form" action="{% url 'Allocation_Info' %}">
+                                                            {% csrf_token %}
+                                                            <div class="row">
+                                                                <h5 class="modal-title" id="modal{{ sala.id }}Label">Sala {{ sala.number }} - {{ sala.type }}</h5>
+                                                                <input type="hidden" id="predio{{ sala.id }}" name="predio" class="predio-input" value="{{ sala.building }}" >
+                                                                <input type="hidden" id="numero{{ sala.id }}" name="numero" class="numero-input" value="{{ sala.number }}">
+                                                                <input type="hidden" id="salaId" name="salaId" value="{{ sala.id }}">
+                                                                <input type="hidden" id="data" name="data" value="{{ date|date:"Y-m-d" }}" readonly>
+                                                                <input type="hidden" id="entrada" name="entrada" value="{{ a.start_time }}">
+                                                                <input type="hidden" id="saida" name="saida" value="{{ a.end_time }}">
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3">
+                                                                    <label for="nomeAlocacao" class="form-label">Nome de quem irá alocar</label>
+                                                                    <input type="text" class="form-control" id="nomeAlocacao" name="nomeAlocacao" required>
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <div class="mb-3">
+                                                                    <label for="nomeTurma" class="form-label">Turma</label>
+                                                                    <input type="text" class="form-control" id="nomeTurma" name="nomeTurma" required>
+                                                                </div>
+                                                                <div class="mb-3">
+                                                                    <label for="nomeDisciplina" class="form-label">Disciplina</label>
+                                                                    <input type="text" class="form-control" id="nomeDisciplina" name="nomeDisciplina" required>
+                                                                </div>
+                                                                <div class="mb-3" style="width: 30%;">
+                                                                    <label for="quantidadeHorarios" class="form-label">Quantidade de Horários</label>
+                                                                    <input type="number" class="form-control" id="quantidadeHorarios" name="quantidadeHorarios">
+                                                                </div>
+                                                            </div>
+                                                            <div class="row">
+                                                                <button type="submit" class="btn btn-success">Salvar</button>
+                                                                <button type="button" class="btn btn-danger btn-voltar">Fechar</button>
+                                                            </div>
+                                                        </form>
+                                                    </div>
+                                    {% endfor %}
+                                    </tr>
+                                    {% endfor %}
+                                </tbody>
+                            </table>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    </div>
+ 
+    {% endfor %}
+</div>
+        </div>
+    </div>
+
+    </div>
+    <div class="bg-light mt-3">
+        <footer class="container px-5 border-top">
+            <div class="row row-cols-1 row-cols-sm-2 row-cols-md-4 py-5 my-2">
+                <div class="col mb-3 d-flex align-items-center justify-content-center">
+                    <img src="{% static 'images/if.png' %}" style="width: 40%; height: 80%;" alt="Image 1">
+                </div>
+                <div class="col mb-3"></div>
+                <em class="text-center d-block py-4 border-top">&copy;Programa Campus Inteligente - Todos os
+                    direitos
+                    reservados</em>
+        </footer>
+        
+    </div>
+    <script src="https://cdn.jsdelivr.net/npm/bootstrap@5.2.0/dist/js/bootstrap.bundle.min.js"
+        integrity="sha384-A3rJD856KowSb7dwlZdYEkO39Gagi7vIsF0jrRAoQmDKKtQBHUuLZ9AsSv4jD4Xa"
+        crossorigin="anonymous"></script>
+</body>
+</html>
+{% endblock %}

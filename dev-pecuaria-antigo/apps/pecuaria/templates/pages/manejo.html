@@ -1,0 +1,86 @@
+{% extends 'base/base_pecuaria.html' %}
+
+{% block title %}Manejos{% endblock title %}
+
+{% block content %}
+<!-- Botão para adicionar manejo -->
+<a class="btn btn-primary mb-3" href="{% url 'criar_manejo' %}" role="button">
+    <i class="fas fa-plus me-1"></i>
+    Adicionar Manejo
+</a>
+
+<!-- Tabela de manejos -->
+<div class="card p-3">
+    <div class="table-responsive pb-3">
+        <table id="table-pecuaria" class="table table-striped table-bordered nowrap align-middle text-center mb-0">
+            <caption>Lista de manejos</caption>
+            <thead>
+                <tr>
+                    <!-- <th scope="col">ID</th> -->
+                    <th scope="col">Data/Hora</th>
+                    <th scope="col">Funcionário</th>
+                    <th scope="col">Animal</th>
+                    <th scope="col">Lote</th>
+                    <th scope="col">Procedimentos</th>
+                    <th scope="col">Produtos</th>
+                    <th scope="col">Ações</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for manejo in manejos %}
+                <tr>
+                    <!-- <td>{{ manejo.id }}</td> -->
+                    <td>{{ manejo.data_hora_manejo|date:'d/m/Y \à\s H:i' }}</td>
+                    <td>{% if manejo.funcionario %}
+                        {{ manejo.funcionario }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if manejo.animal %}
+                        {{ manejo.animal.identificacao_unica }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if manejo.lote %}
+                        Lote {{ manejo.lote.numero }}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if manejo.procedimentos.exists %}
+                        {% for procedimento in manejo.procedimentos.all %}
+                        <span>{{ procedimento.procedimento }}</span><br>
+                        {% endfor %}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if manejo.produtos.exists %}
+                        {% for produto in manejo.produtos.all %}
+                        <span>{{ produto.produto }}</span><br>
+                        {% endfor %}
+                        {% else %}
+                        -
+                        {% endif %}
+                    </td>
+                    <td>
+                        <a class="text-decoration-none me-1" href="{% url 'atualizar_manejo' manejo.id %}" role="button">
+                            <i class="fas fa-edit"></i>
+                        </a>
+                        <a class="text-decoration-none btn-delete" href="{% url 'excluir_manejo' manejo.id %}" role="button">
+                            <i class="fas fa-trash"></i>
+                        </a>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</div>
+{% endblock %}

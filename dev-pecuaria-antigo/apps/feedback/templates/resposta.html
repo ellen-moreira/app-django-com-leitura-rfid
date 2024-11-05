@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="pt-br">
+
+<head>
+    <meta charset="UTF-8">
+    <meta http-equiv="X-UA-Compatible" content="IE=edge">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.3.1/dist/css/bootstrap.min.css" rel="stylesheet"
+        integrity="sha384-4bw+/aepP/YC94hEpVNVgiZdgIC5+VKNBQNGCHeKRQN+PtmoHDEXuppvnDJzQIu9" crossorigin="anonymous">
+    <title>Responder Questionário</title>
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+    <script type="text/javascript" src="https://www.gstatic.com/charts/loader.js"></script>
+    
+    <style>
+        .shaded-box {
+            box-shadow: 0px 0px 15px 5px rgba(0, 0, 0, 0.5);
+        }
+    </style>
+</head>
+
+<body class="bg-success.bg-gradient">
+
+    <main class="container mt-4 d-flex flex-column align-items-center justify-content-center">
+        {% if error_message %}
+        <script>
+            alert("{{ error_message }}");
+        </script>
+        {% endif %}
+
+        <div class="form-container p-4 rounded shaded-box col-md-6">
+            <div class="mb-1 d-flex flex-column align-items-center">
+                <h1 class="mb-4">{{ u_questionario.nome }}</h1>
+                <p>{{ u_questionario.objetivo }}</p>
+                
+            </div>
+            {% for questao, respostas in resultados.items %}
+
+            {% if respostas.0.tipo == "text" or respostas.0.tipo == "textarea" %}
+            <p class="fw-bold fs-5">{{ questao }}</p>
+            <table class="table table-bordered table-striped text-center align-middle">
+                <thead>
+                    <tr>
+                        <th>Resposta</th>
+                        <th>Quantidade</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for resposta in respostas %}
+                    <tr>
+                        <td>{{ resposta.answer }}</td>
+                        <td>{{ resposta.count }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+
+            {% elif respostas.0.tipo == "radio" or respostas.0.tipo == "checkbox" or respostas.0.tipo == "select" %}
+            <p class="fw-bold fs-5">{{ questao }}</p>
+
+
+            <div id="{{ questao }}"></div>
+
+            <script type="text/javascript">
+                google.charts.load('current', {'packages':['corechart']});
+                google.charts.setOnLoadCallback(drawChart);
+          
+                function drawChart() {
+          
+                  var data = google.visualization.arrayToDataTable([
+                    ['Respostas', 'Quantidade'],
+                    {% for resposta in respostas %}
+                        ['{{ resposta.answer}}', {{ resposta.count }} ],
+                    {% endfor %}
+                  ]);
+          
+                  var chart = new google.visualization.PieChart(document.getElementById('{{ questao }}'));
+          
+                  chart.draw(data);
+                }
+              </script>
+            
+
+            {% endif %}
+            {% endfor %}
+        </div>
+    </main>
+    <script>
+        // Array de cores em hexadecimal
+        var cores = ["#FF5733", "#FF3333", "#FF33A8", "#3387FF", "#33FF42", "#33FFAD"];
+
+        // Variável para controlar a cor
+        var i = 0;
+
+        // Função para obter a próxima cor
+        function obterProximaCor() {
+            if (i >= cores.length) {
+                // Reinicia o índice das cores quando atingir o final
+                i = 0;
+            }
+            return cores[i++];
+        }
+    </script>
+
+
+</body>
+
+</html>
