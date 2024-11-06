@@ -111,5 +111,21 @@
     setInterval(fetchAnimalData, 1000);
     // Chama a função uma vez no carregamento da página
     fetchAnimalData();
+
+    // function getCSRFToken() {
+    //     const csrfToken = document.querySelector('[name=csrfmiddlewaretoken]').value;
+
+    //     return csrfToken;
+    // }
+
+    window.addEventListener('beforeunload', function () {
+        fetch('http://192.168.137.17:8000/pecuaria/api/latest-animal/', {
+            method: 'DELETE',
+            // headers: {
+            //     'Content-Type': 'application/json',
+            //     'X-CSRFToken': getCSRFToken(),
+            // }
+        });
+    });
 </script>
 {% endblock javascript %}

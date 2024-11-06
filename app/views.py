@@ -11,6 +11,7 @@ from django.shortcuts import get_object_or_404, redirect, render
 from django.urls import reverse_lazy
 from django.utils.timezone import localtime
 from django.views.decorators.csrf import csrf_exempt
+from django.views.decorators.http import require_http_methods
 import os
 
 # Create your views here.
@@ -663,8 +664,17 @@ def get_animal(request, rfid):
     except Animal.DoesNotExist:
         return JsonResponse({'error': 'Animal not found'}, status=404)
 
+@csrf_exempt
+@require_http_methods(['GET', 'DELETE'])
 def latest_animal(request):
     """Retorna os dados do animal mais recente lido."""
+
+    global latest_animal_data
+
+    if request.method == 'DELETE':
+        latest_animal_data = None
+        return JsonResponse({'message': 'Last read animal data cleared'}, status=200)
+
     if latest_animal_data:
         return JsonResponse(latest_animal_data, status=200)
     else:
