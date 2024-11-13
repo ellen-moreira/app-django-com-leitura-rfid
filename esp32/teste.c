@@ -3,13 +3,13 @@
 #include <WebServer.h> // Alterado para ESP32
 
 // Defina os pinos do módulo RFID
-#define RX_PIN 4 // GPIO 4 para RX
-#define TX_PIN 2 // GPIO 2 para TX
+#define RX_PIN 16 // GPIO 16 para RX
+#define TX_PIN 17 // GPIO 17 para TX
 
 // Configuração da rede Wi-Fi
-const char* ssid = "teste2";
-const char* password = "teste321";
-const String serverUrl = "http://192.168.137.17:8000/pecuaria/api/animal/"; // IP da máquina
+const char* ssid = "IoTLab";
+const char* password = "40068718";
+const String serverUrl = "http://192.168.0.104:8000/pecuaria/api/animal/"; // IP da máquina
 
 String text;
 String lastCardNumber = ""; // Variável para armazenar o último RFID lido
