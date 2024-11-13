@@ -655,7 +655,7 @@ def get_animal(request, rfid):
             'pai': animal.pai.identificacao_unica if animal.pai else 'N/A',
             'status': animal.status,
             'setor': animal.setor.nome if animal.setor else 'N/A',
-            'foto': animal.foto.url if animal.foto else os.path.join(settings.MEDIA_URL, 'default/sem-foto-sem-imagem.jpeg'),
+            'foto': animal.foto.url if animal.foto else os.path.join(settings.MEDIA_URL, 'default-boi.jpg'),
         }
 
         latest_animal_data = data  # Armazena os dados lidos
@@ -679,6 +679,7 @@ def latest_animal(request):
         return JsonResponse(latest_animal_data, status=200)
     else:
         return JsonResponse({'error': 'No data available'}, status=404)
-    
+
+@login_required(login_url=reverse_lazy('pecuaria:login')) # Restringe o acesso à página de informações do animal para usuários autenticados
 def animal_info(request):
     return render(request, 'pages/animal_info.html')
